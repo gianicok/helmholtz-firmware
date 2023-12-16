@@ -1,7 +1,7 @@
 #define DAC1 25
-#define HI_BUT 34 //A2
-#define MI_BUT 39 //A3
-#define LO_BUT 36 //A4
+#define HI_BUT 39 //A3
+#define MI_BUT 36 //A4
+#define LO_BUT 4 //A5
 
 int high = 255; // 25.0 V
 int mid = 128;  // 12.5 V
