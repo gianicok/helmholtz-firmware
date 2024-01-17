@@ -102,11 +102,21 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  // INIT PID LOOP X
+  // INIT PID LOOP Y
+  // INIT PID LOOP Z
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+	// UPDATE PID LOOP X
+	// UPDATE PID LOOP Y
+	// UPDATE PID LOOP Z
+
   }
   /* USER CODE END 3 */
 }
