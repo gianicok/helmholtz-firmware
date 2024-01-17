@@ -1,0 +1,31 @@
+# Ignore debug folder
+Debug/
+
+# Ignore release folder
+Release/
+
+# Ignore language settings
+.settings/
+
+# CubeIDE launch files
+*.launch
+
+# STM32CubeMX cache file
+.mxproject
+
+# VSCode settings
+.vscode/
+
+# Apple DS_Store Files
+**/.DS_Store
+
+# Generated git commit header
+gitcommit.h
+
+# Makefiles
+generated.mk
+user.mk
+
+# Doxygen Output
+html/
+latex/
