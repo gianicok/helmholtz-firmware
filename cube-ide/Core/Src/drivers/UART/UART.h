@@ -12,19 +12,16 @@
 #include <stdint.h>
 #include "stm32l4xx_hal.h"
 
-#define HHC_UART_PACKET_LENGTH 7
-
-uint8_t hhc_uart_rx_buffer[HHC_UART_PACKET_LENGTH] = {0};
-uint8_t hhc_uart_tx_buffer[HHC_UART_PACKET_LENGTH] = {0};
+#define hcc_UART_PACKET_LENGTH 7
 
 typedef struct{
 
 	HAL_StatusTypeDef status;
 	UART_HandleTypeDef *handle;
 
-} hhc_uart_t;
+} hcc_uart_t;
 
-void hhc_uart_init(hhc_uart_t *hhc_uart, UART_HandleTypeDef *uart);
-void hhc_uart_transmit(hhc_uart_t *hhc_uart, uint8_t *tx_data);
+void hcc_uart_init(hcc_uart_t *hcc_uart, UART_HandleTypeDef *uart);
+void hcc_uart_transmit(hcc_uart_t *hcc_uart, uint8_t *tx_data);
 
 #endif /* SRC_DRIVERS_UART_UART_H_ */

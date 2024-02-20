@@ -7,23 +7,26 @@
 
 #include "UART.h"
 
-void hhc_uart_init(hhc_uart_t *hhc_uart, UART_HandleTypeDef *uart){
+uint8_t hcc_uart_rx_buffer[hcc_UART_PACKET_LENGTH] = {0};
+uint8_t hcc_uart_tx_buffer[hcc_UART_PACKET_LENGTH] = {0};
 
-	hhc_uart->handle = uart;
+void hcc_uart_init(hcc_uart_t *hcc_uart, UART_HandleTypeDef *uart){
 
-	hhc_uart->status = HAL_UART_Receive_IT(hhc_uart->handle, hhc_uart_rx_buffer, HHC_UART_PACKET_LENGTH);
+	hcc_uart->handle = uart;
+
+	hcc_uart->status = HAL_UART_Receive_IT(hcc_uart->handle, hcc_uart_rx_buffer, hcc_UART_PACKET_LENGTH);
 
 }
 
-void hhc_uart_transmit(hhc_uart_t *hhc_uart, uint8_t *tx_data){
+void hcc_uart_transmit(hcc_uart_t *hcc_uart, uint8_t *tx_data){
 
-	HAL_UART_Transmit(hhc_uart->handle, tx_data, HHC_UART_PACKET_LENGTH, 100);
+	HAL_UART_Transmit(hcc_uart->handle, tx_data, hcc_UART_PACKET_LENGTH, 100);
 
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
-	//hhc_pid_rxhandler(); function to be defined in PID application
-	HAL_UART_Receive_IT(huart, hhc_uart_rx_buffer, HHC_UART_PACKET_LENGTH);
+	//hcc_pid_rxhandler(); function to be defined in PID application
+	HAL_UART_Receive_IT(huart, hcc_uart_rx_buffer, hcc_UART_PACKET_LENGTH);
 
 }

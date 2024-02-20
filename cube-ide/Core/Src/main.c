@@ -22,6 +22,13 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+// Drivers
+#include "UART/UART.h"
+#include "I2C/I2C.h"
+
+// Peripherals
+#include "DAC081/DAC081.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,24 +105,33 @@ int main(void)
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
 
+  // Custom Initializations
+
+  hcc_uart_t hcc_uart;
+  hcc_uart_init(&hcc_uart, &huart4);
+
+  hcc_i2c_t hcc_i2c;
+  hcc_i2c_init(&hcc_i2c, &hi2c1);
+
+  // Test code for I2C
+
+  hcc_dac_set_output(&hcc_i2c, X_DAC, 0);   // Vout = 0
+  HAL_Delay(500); // delay by 0.5 second
+  hcc_dac_set_output(&hcc_i2c, X_DAC, 128); // Vout = VCC/2
+  HAL_Delay(500); // delay by 0.5 second
+  hcc_dac_set_output(&hcc_i2c, X_DAC, 255); // Vout = VCC
+  HAL_Delay(500); // delay by 0.5 second
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
-  // INIT PID LOOP X
-  // INIT PID LOOP Y
-  // INIT PID LOOP Z
 
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-	// UPDATE PID LOOP X
-	// UPDATE PID LOOP Y
-	// UPDATE PID LOOP Z
 
   }
   /* USER CODE END 3 */
