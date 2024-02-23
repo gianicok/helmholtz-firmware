@@ -69,6 +69,8 @@ void Error_Handler(void);
 #define Y_DIR_GPIO_Port GPIOC
 #define X_DIR_Pin GPIO_PIN_8
 #define X_DIR_GPIO_Port GPIOC
+#define Z_DIR2_Pin GPIO_PIN_9
+#define Z_DIR2_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 

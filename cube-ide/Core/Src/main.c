@@ -23,7 +23,6 @@
 /* USER CODE BEGIN Includes */
 
 // Drivers
-#include "UART/UART.h"
 #include "I2C/I2C.h"
 
 // Peripherals
@@ -105,22 +104,13 @@ int main(void)
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
 
-  // Custom Initializations
-
-  hcc_uart_t hcc_uart;
-  hcc_uart_init(&hcc_uart, &huart4);
-
+  // initialize custom I2C driver
   hcc_i2c_t hcc_i2c;
   hcc_i2c_init(&hcc_i2c, &hi2c1);
 
-  // Test code for I2C
-
-  hcc_dac_set_output(&hcc_i2c, X_DAC, 0);   // Vout = 0
-  HAL_Delay(500); // delay by 0.5 second
-  hcc_dac_set_output(&hcc_i2c, X_DAC, 128); // Vout = VCC/2
-  HAL_Delay(500); // delay by 0.5 second
-  hcc_dac_set_output(&hcc_i2c, X_DAC, 255); // Vout = VCC
-  HAL_Delay(500); // delay by 0.5 second
+  hcc_dac_set_output(&hcc_i2c, X_DAC, 255);
+  hcc_dac_set_output(&hcc_i2c, Y_DAC, 255);
+  hcc_dac_set_output(&hcc_i2c, Z_DAC, 255);
 
   /* USER CODE END 2 */
 
@@ -319,19 +309,18 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, DBG_1_Pin|DBG_2_Pin|Z_DIR_Pin|Y_DIR_Pin
-                          |X_DIR_Pin, GPIO_PIN_RESET);
+                          |X_DIR_Pin|Z_DIR2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(DBG_3_GPIO_Port, DBG_3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : DBG_1_Pin DBG_2_Pin Z_DIR_Pin Y_DIR_Pin
-                           X_DIR_Pin */
+                           X_DIR_Pin Z_DIR2_Pin */
   GPIO_InitStruct.Pin = DBG_1_Pin|DBG_2_Pin|Z_DIR_Pin|Y_DIR_Pin
-                          |X_DIR_Pin;
+                          |X_DIR_Pin|Z_DIR2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
