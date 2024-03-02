@@ -28,6 +28,7 @@
 
 // Peripherals
 #include "DAC081/DAC081.h"
+#include "MAX222/MAX222.h"
 
 /* USER CODE END Includes */
 
@@ -105,30 +106,44 @@ int main(void)
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
 
-  // Custom Initializations
-
-  hcc_uart_t hcc_uart;
-  hcc_uart_init(&hcc_uart, &huart4);
-
+  // initialize I2C
   hcc_i2c_t hcc_i2c;
   hcc_i2c_init(&hcc_i2c, &hi2c1);
 
-  // Test code for I2C
+  // wake up H-Bridges and set directions
+  hcc_bridge_wake();
 
-  hcc_dac_set_output(&hcc_i2c, X_DAC, 0);   // Vout = 0
-  HAL_Delay(500); // delay by 0.5 second
-  hcc_dac_set_output(&hcc_i2c, X_DAC, 128); // Vout = VCC/2
-  HAL_Delay(500); // delay by 0.5 second
-  hcc_dac_set_output(&hcc_i2c, X_DAC, 255); // Vout = VCC
-  HAL_Delay(500); // delay by 0.5 second
+  hcc_set_x(1);
+  hcc_set_y(1);
+  hcc_set_z(1);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+  uint8_t dir = 1;
+  uint8_t i = 255;
+  uint8_t packet[] = {0,0};
+
   while (1)
   {
+	i = i - 1;
+	if(i == 70){
+		i = 255;
+		dir = !dir;
+		hcc_set_x(dir);
+		hcc_set_y(dir);
+		hcc_set_z(dir);
+	}
+	uint8_t b1 = i >> 4 & 0x0F;
+    uint8_t b2 = i & 0xF0;
+	packet[0] = b1;
+	packet[1] = b2;
+    HAL_I2C_Master_Transmit(&hi2c1, X_DAC, packet, sizeof(packet), HAL_MAX_DELAY);
+    HAL_I2C_Master_Transmit(&hi2c1, Y_DAC, packet, sizeof(packet), HAL_MAX_DELAY);
+    HAL_I2C_Master_Transmit(&hi2c1, Z_DAC, packet, sizeof(packet), HAL_MAX_DELAY);
+    HAL_Delay(10);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -323,15 +338,18 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, DBG_1_Pin|DBG_2_Pin|Z_DIR_Pin|Y_DIR_Pin
-                          |X_DIR_Pin, GPIO_PIN_RESET);
+                          |X_DIR_Pin|Z_DIR2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(DBG_3_GPIO_Port, DBG_3_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, X_DIR2_Pin|Y_DIR2_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pins : DBG_1_Pin DBG_2_Pin Z_DIR_Pin Y_DIR_Pin
-                           X_DIR_Pin */
+                           X_DIR_Pin Z_DIR2_Pin */
   GPIO_InitStruct.Pin = DBG_1_Pin|DBG_2_Pin|Z_DIR_Pin|Y_DIR_Pin
-                          |X_DIR_Pin;
+                          |X_DIR_Pin|Z_DIR2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -343,6 +361,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DBG_3_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : X_DIR2_Pin Y_DIR2_Pin */
+  GPIO_InitStruct.Pin = X_DIR2_Pin|Y_DIR2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
